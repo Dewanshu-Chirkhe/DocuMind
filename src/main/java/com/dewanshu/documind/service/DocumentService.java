@@ -24,8 +24,13 @@ public class DocumentService {
             text = stripper.getText(document);
         }
 
-        TokenTextSplitter splitter =
-                TokenTextSplitter.builder().build();
+        TokenTextSplitter splitter = TokenTextSplitter.builder()
+                .withChunkSize(250)
+                .withMinChunkSizeChars(100)
+                .withMinChunkLengthToEmbed(10)
+                .withMaxNumChunks(10000)
+                .withKeepSeparator(true)
+                .build();
 
         return splitter.apply(
                 List.of(new Document(text))

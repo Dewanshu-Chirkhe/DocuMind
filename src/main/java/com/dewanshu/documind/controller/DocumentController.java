@@ -31,12 +31,11 @@ public class DocumentController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(
+    public ResponseEntity<List<String>> upload(
             @RequestParam("file") MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body("File is empty");
+            return ResponseEntity.badRequest().build();
         }
 
         Files.createDirectories(storagePath);
@@ -52,8 +51,9 @@ public class DocumentController {
         vectorStore.add(documents);
 
         return ResponseEntity.ok(
-                "Document uploaded and stored successfully. Chunks: "
-                        + documents.size()
+                documents.stream()
+                        .map(Document::getText)
+                        .toList()
         );
     }
 }
