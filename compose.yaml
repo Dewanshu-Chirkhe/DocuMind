@@ -1,11 +1,15 @@
 services:
-  pgvector:
-    image: 'pgvector/pgvector:pg16'
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: documind-postgres
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
-    labels:
-      - "org.springframework.boot.service-connection=postgres"
+      POSTGRES_DB: documind
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - '5432'
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
