@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class DocumentService {
 
-    public List<String> extractAndSplit(MultipartFile file) throws IOException {
+    public List<Document> extractAndSplit(MultipartFile file) throws IOException {
 
         String text;
 
@@ -24,13 +24,11 @@ public class DocumentService {
             text = stripper.getText(document);
         }
 
-        TokenTextSplitter splitter = TokenTextSplitter.builder().build();
+        TokenTextSplitter splitter =
+                TokenTextSplitter.builder().build();
 
-        List<Document> documents =
-                splitter.apply(List.of(new Document(text)));
-
-        return documents.stream()
-                .map(Document::getText)
-                .toList();
+        return splitter.apply(
+                List.of(new Document(text))
+        );
     }
 }
