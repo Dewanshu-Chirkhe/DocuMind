@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -23,11 +24,11 @@ public class DocumentController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(
+    public ResponseEntity<List<String>> upload(
             @RequestParam("file") MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("File is empty");
+            return ResponseEntity.badRequest().build();
         }
 
         Files.createDirectories(storagePath);
@@ -35,8 +36,8 @@ public class DocumentController {
         Path filePath = storagePath.resolve(file.getOriginalFilename());
         file.transferTo(filePath);
 
-        String text = documentService.extractText(file);
+        List<String> chunks = documentService.extractAndSplit(file);
 
-        return ResponseEntity.ok(text);
+        return ResponseEntity.ok(chunks);
     }
 }
