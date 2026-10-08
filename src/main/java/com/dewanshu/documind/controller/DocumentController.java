@@ -1,5 +1,6 @@
 package com.dewanshu.documind.controller;
 
+import com.dewanshu.documind.service.DocumentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,11 +14,17 @@ import java.nio.file.Paths;
 @RequestMapping("/api/documents")
 public class DocumentController {
 
+    private final DocumentService documentService;
+
     private final Path storagePath = Paths.get("storage/documents");
 
+    public DocumentController(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file)
-            throws IOException {
+    public ResponseEntity<String> upload(
+            @RequestParam("file") MultipartFile file) throws IOException {
 
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File is empty");
@@ -28,8 +35,8 @@ public class DocumentController {
         Path filePath = storagePath.resolve(file.getOriginalFilename());
         file.transferTo(filePath);
 
-        return ResponseEntity.ok(
-                "File uploaded successfully: " + file.getOriginalFilename()
-        );
+        String text = documentService.extractText(file);
+
+        return ResponseEntity.ok(text);
     }
 }
