@@ -20,7 +20,7 @@ spring:
 
         chat:
           options:
-            model: gemini-2.5-flash
+            model: gemini-3.5-flash-lite
 
         embedding:
           api-key: ${GEMINI_API_KEY}
@@ -31,7 +31,7 @@ spring:
     vectorstore:
       pgvector:
         initialize-schema: true
-        remove-existing-vector-store-table: false
+        remove-existing-vector-store-table: true
         dimensions: 1536
         index-type: HNSW
         distance-type: COSINE_DISTANCE
