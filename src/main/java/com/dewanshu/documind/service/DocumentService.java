@@ -24,6 +24,8 @@ public class DocumentService {
             text = stripper.getText(document);
         }
 
+        text = text.replace("\u0000", "");
+
         TokenTextSplitter splitter = TokenTextSplitter.builder()
                 .withChunkSize(250)
                 .withMinChunkSizeChars(100)
